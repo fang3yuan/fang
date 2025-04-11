@@ -1,97 +1,176 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fang</title>
-    <style>
-        /* إعداد التنسيق العام */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #f5f5f5;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مرآة شخصيتك الغامضة</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        h1 {
-            font-size: 3em;
-            color: #f39c12;
-            margin-bottom: 20px;
-        }
+    body {
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
 
-        p {
-            font-size: 1.2em;
-            margin-bottom: 40px;
-            color: #ccc;
-        }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 1em;
+      z-index: 2;
+    }
 
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
+    .mirror {
+      background: rgba(255, 255, 255, 0.07);
+      padding: 2em;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+      max-width: 600px;
+      z-index: 2;
+      position: relative;
+      transition: transform 0.4s ease;
+    }
 
-        .social-links a {
-            text-decoration: none;
-            color: #f5f5f5;
-            font-size: 1.5em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background-color: #1e1e1e;
-            padding: 15px 30px;
-            border-radius: 8px;
-            width: 250px;
-            justify-content: center;
-            transition: background-color 0.3s, transform 0.3s;
-        }
+    .mirror:hover {
+      transform: scale(1.03);
+    }
 
-        .social-links a:hover {
-            background-color: #f39c12;
-            transform: scale(1.05);
-        }
+    .message {
+      font-size: 1.3em;
+      line-height: 1.6;
+    }
 
-        .social-links img {
-            width: 30px;
-            height: 30px;
-        }
+    button {
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      background-color: #ffffff22;
+      color: white;
+      cursor: pointer;
+      margin-top: 1.5em;
+      transition: background 0.3s ease;
+    }
 
-        footer {
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #777;
-        }
-    </style>
+    button:hover {
+      background-color: #ffffff44;
+    }
+
+    .fog {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: url('https://i.ibb.co/yXxkxkY/fog.png') repeat;
+      animation: moveFog 60s linear infinite;
+      opacity: 0.07;
+      z-index: 0;
+    }
+
+    @keyframes moveFog {
+      from { transform: translateX(0); }
+      to { transform: translateX(-100%); }
+    }
+
+    .eye {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: white;
+      position: absolute;
+      box-shadow: inset -10px -10px 0 black;
+      animation: blink 8s infinite;
+      opacity: 0.07;
+    }
+
+    @keyframes blink {
+      0%, 97%, 100% { transform: scaleY(1); }
+      98%, 99% { transform: scaleY(0.1); }
+    }
+  </style>
 </head>
 <body>
-    <h1>Fang</h1>
-    <p>تابعنا على وسائل التواصل الاجتماعي</p>
-    <div class="social-links">
-        <a href="https://www.tiktok.com/@stxq?_t=ZS-8t5cOsiVWMi&_r=1" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/TikTok_logo.svg" alt="TikTok">
-            تيك توك
-        </a>
-        <a href="https://www.instagram.com/btekh_?igsh=aDhzMnl4b3V3Mnhz" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
-            إنستغرام
-        </a>
-        <a href="t.me/Ob_i9" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
-            تلجرام
-        </a>
-        <a href="https://t.me/obaidaq" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Channel">
-            قناة تلجرام
-        </a>
-    </div>
-    <footer>&copy; 2025 Fang - جميع الحقوق محفوظة.</footer>
+
+  <div class="fog"></div>
+
+  <!-- تظهر مجموعة عيون بطريقة عشوائية -->
+  <script>
+    for (let i = 0; i < 15; i++) {
+      const eye = document.createElement('div');
+      eye.className = 'eye';
+      eye.style.top = `${Math.random() * 100}%`;
+      eye.style.left = `${Math.random() * 100}%`;
+      eye.style.width = eye.style.height = `${30 + Math.random() * 30}px`;
+      eye.style.opacity = `${0.03 + Math.random() * 0.05}`;
+      eye.style.animationDelay = `${Math.random() * 5}s`;
+      document.body.appendChild(eye);
+    }
+  </script>
+
+  <h1>مرآتك تقول:</h1>
+  <div class="mirror">
+    <div class="message" id="message">اضغط الزر لتعرف من أنت حقاً...</div>
+    <button onclick="showMessage()">من أنا؟</button>
+  </div>
+
+  <script>
+    const messages = [
+      "أنت الشخص اللي ياخذ لقطة شاشة، وينساها لسنين.",
+      "تحب القهوة؟ لا، أنت *تعتمد* على القهوة.",
+      "من النوع اللي يرد بعد 3 أيام وكأن شيئاً لم يكن.",
+      "تبدو كشخص يخزن الميمز أكثر مما يرسلها.",
+      "أنت نسخة نادرة من شخص طبيعي... تقريباً.",
+      "تحب الهدوء، لكن دايم صوت المكيف يعجبك أكثر.",
+      "أنت الشخص اللي يضحك على نفسه أكثر من غيره.",
+      "من النوع اللي يقول 'بكرة أبدأ' من سنة 2019.",
+      "أنت تجمع التناقضات... بس بطريقتك.",
+      "واضح إنك عايش فيلم، بس بدون سيناريو مكتوب.",
+      "عندك طاقة اجتماعية محدودة تنفذ بعد 15 دقيقة.",
+      "تحب تبدأ أشياء كثيرة... بس النهاية؟ نادرة.",
+      "تتكلم مع نفسك، ومبسوط من النقاش.",
+      "أنت الشخص اللي إذا طلع نسى مفتاحه... والمغزى.",
+      "تمشي على عشوائيتك وكأنك مخطط لها.",
+      "دايم تحس إن في أحد يراقبك... يمكن صح.",
+      "تحب الموسيقى أكثر من كثير من الناس.",
+      "لو كنت فصل دراسي، كنت بتكون الحصة المفضلة.",
+      "فيك لمعة غريبة، محد يعرف تفسرها.",
+      "إذا سكّت، الناس تحسبك زعلان... بس أنت تفكر بالأكل.",
+      "تحب الضحك... بس ضحكتك غريبة.",
+      "تعيش اللحظة، حتى لو اللحظة قاعدة تفلسك.",
+      "تحب تتفلسف حتى لو ما عندك دليل.",
+      "تفهم المشاعر، بس تصفها بصعوبة.",
+      "تضحك على النكت البايخة أكثر من اللازم.",
+      "تحب الجو الغريب اللي يسبق المطر.",
+      "تحس نفسك بطل رواية... بس الكاتبة ناسية تكمل.",
+      "إذا دخلت مكان، لازم تصدم أحد بكلمة غريبة.",
+      "تحب التفاصيل الصغيرة اللي محد يلاحظها.",
+      "تبحث عن عمق في كل شي... حتى في الميمز.",
+      "أنت الشخص اللي يسأل الأسئلة الغريبة في نص الليل.",
+      "تحب تحلل الناس، بس ما تسمح لأحد يحللك.",
+      "أفكارك كثير، بس ما تعرف أيها تبدأ.",
+      "تحب العزلة، بس تبغى أحد يفهمك فيها.",
+      "لو كنت طقس، كنت غيوم ونسمة مفاجأة.",
+      "أنت المزاج، وأحيانًا مزاجك مرعب.",
+      "فيك طاقة كأنك من عالم ثاني.",
+      "من النوع اللي يتذكر موقف محرج من 6 سنين قبل النوم.",
+      "أنت شخصية جانبية... بس تسوي دراما البطل.",
+      "تحب الأحلام أكثر من الواقع... وأحياناً العكس."
+    ];
+
+    function showMessage() {
+      const msg = messages[Math.floor(Math.random() * messages.length)];
+      document.getElementById('message').textContent = msg;
+    }
+  </script>
 </body>
 </html>
