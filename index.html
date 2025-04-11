@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>مرآة شخصيتك الغامضة</title>
+  <title>من أنت في الظلام؟</title>
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -12,43 +13,47 @@
     }
 
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Creepster', cursive;
       overflow: hidden;
-      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 100%);
-      color: white;
+      background: linear-gradient(160deg, #000000, #111111, #1a1a1a);
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
       position: relative;
+      text-align: center;
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 3em;
       margin-bottom: 1em;
       z-index: 2;
+      text-shadow: 0 0 10px red;
     }
 
     .mirror {
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(0, 0, 0, 0.6);
       padding: 2em;
       border-radius: 20px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 0 30px rgba(255,255,255,0.1);
-      max-width: 600px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
+      max-width: 700px;
       z-index: 2;
       position: relative;
-      transition: transform 0.4s ease;
+      animation: pulse 4s infinite alternate ease-in-out;
     }
 
-    .mirror:hover {
-      transform: scale(1.03);
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
+      100% { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 0, 0, 0.3); }
     }
 
     .message {
-      font-size: 1.3em;
-      line-height: 1.6;
+      font-size: 1.5em;
+      min-height: 100px;
+      transition: all 0.3s ease;
     }
 
     button {
@@ -56,7 +61,7 @@
       font-size: 1em;
       border: none;
       border-radius: 10px;
-      background-color: #ffffff22;
+      background-color: #440000;
       color: white;
       cursor: pointer;
       margin-top: 1.5em;
@@ -64,112 +69,139 @@
     }
 
     button:hover {
-      background-color: #ffffff44;
+      background-color: #770000;
     }
 
     .fog {
       position: absolute;
+      top: -50%;
+      left: -50%;
       width: 200%;
       height: 200%;
-      background: url('https://i.ibb.co/yXxkxkY/fog.png') repeat;
-      animation: moveFog 60s linear infinite;
-      opacity: 0.07;
+      background: url('https://i.imgur.com/8fKQ3xL.png') repeat;
+      background-size: cover;
+      opacity: 0.05;
+      animation: fogMove 120s linear infinite;
       z-index: 0;
+      pointer-events: none;
     }
 
-    @keyframes moveFog {
-      from { transform: translateX(0); }
-      to { transform: translateX(-100%); }
+    @keyframes fogMove {
+      from { transform: translate(0, 0); }
+      to { transform: translate(20%, 20%); }
+    }
+
+    .eyes-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .eye {
-      width: 50px;
-      height: 50px;
+      position: absolute;
       border-radius: 50%;
       background: white;
-      position: absolute;
       box-shadow: inset -10px -10px 0 black;
-      animation: blink 8s infinite;
-      opacity: 0.07;
+      animation: blink 6s infinite;
+      opacity: 0.05;
     }
 
     @keyframes blink {
       0%, 97%, 100% { transform: scaleY(1); }
       98%, 99% { transform: scaleY(0.1); }
     }
+
+    #bg-audio {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <audio autoplay loop id="bg-audio">
+    <source src="https://cdn.pixabay.com/audio/2022/10/20/audio_bf8ff2f1f0.mp3" type="audio/mp3">
+  </audio>
 
   <div class="fog"></div>
+  <div class="eyes-container" id="eyes"></div>
 
-  <!-- تظهر مجموعة عيون بطريقة عشوائية -->
-  <script>
-    for (let i = 0; i < 15; i++) {
-      const eye = document.createElement('div');
-      eye.className = 'eye';
-      eye.style.top = `${Math.random() * 100}%`;
-      eye.style.left = `${Math.random() * 100}%`;
-      eye.style.width = eye.style.height = `${30 + Math.random() * 30}px`;
-      eye.style.opacity = `${0.03 + Math.random() * 0.05}`;
-      eye.style.animationDelay = `${Math.random() * 5}s`;
-      document.body.appendChild(eye);
-    }
-  </script>
-
-  <h1>مرآتك تقول:</h1>
+  <h1>انعكاسك يقول:</h1>
   <div class="mirror">
-    <div class="message" id="message">اضغط الزر لتعرف من أنت حقاً...</div>
+    <div class="message" id="message">اضغط الزر... لتكتشف من أنت حقاً...</div>
     <button onclick="showMessage()">من أنا؟</button>
   </div>
 
   <script>
     const messages = [
-      "أنت الشخص اللي ياخذ لقطة شاشة، وينساها لسنين.",
-      "تحب القهوة؟ لا، أنت *تعتمد* على القهوة.",
-      "من النوع اللي يرد بعد 3 أيام وكأن شيئاً لم يكن.",
-      "تبدو كشخص يخزن الميمز أكثر مما يرسلها.",
-      "أنت نسخة نادرة من شخص طبيعي... تقريباً.",
-      "تحب الهدوء، لكن دايم صوت المكيف يعجبك أكثر.",
-      "أنت الشخص اللي يضحك على نفسه أكثر من غيره.",
-      "من النوع اللي يقول 'بكرة أبدأ' من سنة 2019.",
-      "أنت تجمع التناقضات... بس بطريقتك.",
-      "واضح إنك عايش فيلم، بس بدون سيناريو مكتوب.",
-      "عندك طاقة اجتماعية محدودة تنفذ بعد 15 دقيقة.",
-      "تحب تبدأ أشياء كثيرة... بس النهاية؟ نادرة.",
-      "تتكلم مع نفسك، ومبسوط من النقاش.",
-      "أنت الشخص اللي إذا طلع نسى مفتاحه... والمغزى.",
-      "تمشي على عشوائيتك وكأنك مخطط لها.",
-      "دايم تحس إن في أحد يراقبك... يمكن صح.",
-      "تحب الموسيقى أكثر من كثير من الناس.",
-      "لو كنت فصل دراسي، كنت بتكون الحصة المفضلة.",
-      "فيك لمعة غريبة، محد يعرف تفسرها.",
-      "إذا سكّت، الناس تحسبك زعلان... بس أنت تفكر بالأكل.",
-      "تحب الضحك... بس ضحكتك غريبة.",
-      "تعيش اللحظة، حتى لو اللحظة قاعدة تفلسك.",
-      "تحب تتفلسف حتى لو ما عندك دليل.",
-      "تفهم المشاعر، بس تصفها بصعوبة.",
-      "تضحك على النكت البايخة أكثر من اللازم.",
-      "تحب الجو الغريب اللي يسبق المطر.",
-      "تحس نفسك بطل رواية... بس الكاتبة ناسية تكمل.",
-      "إذا دخلت مكان، لازم تصدم أحد بكلمة غريبة.",
-      "تحب التفاصيل الصغيرة اللي محد يلاحظها.",
-      "تبحث عن عمق في كل شي... حتى في الميمز.",
-      "أنت الشخص اللي يسأل الأسئلة الغريبة في نص الليل.",
-      "تحب تحلل الناس، بس ما تسمح لأحد يحللك.",
-      "أفكارك كثير، بس ما تعرف أيها تبدأ.",
-      "تحب العزلة، بس تبغى أحد يفهمك فيها.",
-      "لو كنت طقس، كنت غيوم ونسمة مفاجأة.",
-      "أنت المزاج، وأحيانًا مزاجك مرعب.",
-      "فيك طاقة كأنك من عالم ثاني.",
-      "من النوع اللي يتذكر موقف محرج من 6 سنين قبل النوم.",
-      "أنت شخصية جانبية... بس تسوي دراما البطل.",
-      "تحب الأحلام أكثر من الواقع... وأحياناً العكس."
+      "هناك شيء يراقبك... لكنه بداخلك.",
+      "أنت لا تتذكر الحلم... لأنك كنت بداخله.",
+      "كل ما تنساه... يتجمع هنا.",
+      "ضحكتك تخفي صوتاً آخر.",
+      "عقلك لا ينام... فقط يراقب.",
+      "كأنك كنت هنا من قبل... أو ما زلت.",
+      "أنت انعكاس لشخص لم يوجد أبداً.",
+      "كل شيء طبيعي... حتى تنظر بعمق.",
+      "لماذا المرآة لا تعكسك كما تتخيل؟",
+      "الظل خلفك ليس ظلّك.",
+      "هل تراقب؟ أم تُراقب؟",
+      "كل مرة تنظر فيها هنا، تُنسى في عالمٍ آخر.",
+      "شيء في داخلك يحاول الخروج.",
+      "أنت تعيش في لحظة عالقة منذ زمن.",
+      "العين ترى، لكنك لا تدرك.",
+      "هناك اسم تنساه... لكنه يتكرر في أحلامك.",
+      "أنت شخصية ثانوية في حياة غيرك.",
+      "هناك من يستخدم جسدك حين تنام.",
+      "أنت لا تشعر بالوقت... لأنه لم يعد حقيقي.",
+      "الأصوات التي تتجاهلها... تعرفك جيداً.",
+      "كل شيء هادئ... أكثر من اللازم.",
+      "المرآة لا تكذب، لكنها تخفي الحقيقة.",
+      "أنفاسك ليست وحدك.",
+      "كل ما تراه... يُراقبك في المقابل.",
+      "أنت متفرع، لكنك لا تعلم من الأصل.",
+      "ربما أنت ذكرى لشخص مات.",
+      "تحرك الآن... فقط لترى من سيتبعك.",
+      "وجهك ليس كما تراه... بل كما يراه الآخرون.",
+      "في صمتك، توجد رسائل كثيرة لم تُقرأ.",
+      "كل جملة هنا... كانت في ذهنك مسبقاً.",
+      "الباب المغلق خلفك... لم يكن مغلقًا تماماً.",
+      "أحيانًا، يغمض ظلك عينيه قبلك.",
+      "متى كانت آخر مرة رأيت نفسك؟ حقًا؟",
+      "الدم في أحلامك له رائحة مألوفة.",
+      "تذكرت اسمك... لكنه لم يكن لك.",
+      "كلما خفت، يصبح أقرب.",
+      "همس في أذنك البارحة... لم يكن من حلم.",
+      "كل ثانية تمر... تُمحى نسخة منك.",
+      "ذلك الصوت الذي تسمعه عندما تصمت... ليس من عالمنا.",
+      "شيء ما ينتظرك في الجانب الآخر من المرآة."
     ];
+
+    const msgBox = document.getElementById('message');
+
+    function typeEffect(text, i = 0) {
+      if (i === 0) msgBox.textContent = '';
+      if (i < text.length) {
+        msgBox.textContent += text[i];
+        setTimeout(() => typeEffect(text, i + 1), 50);
+      }
+    }
 
     function showMessage() {
       const msg = messages[Math.floor(Math.random() * messages.length)];
-      document.getElementById('message').textContent = msg;
+      typeEffect(msg);
+    }
+
+    const container = document.getElementById('eyes');
+    for (let i = 0; i < 20; i++) {
+      const eye = document.createElement('div');
+      eye.className = 'eye';
+      eye.style.top = `${Math.random() * 100}%`;
+      eye.style.left = `${Math.random() * 100}%`;
+      eye.style.width = eye.style.height = `${20 + Math.random() * 30}px`;
+      eye.style.animationDelay = `${Math.random() * 5}s`;
+      container.appendChild(eye);
     }
   </script>
 </body>
