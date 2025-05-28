@@ -1,208 +1,22 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>من أنت في الظلام؟</title>
-  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+import React, { useEffect, useState } from "react"; import dayjs from "dayjs"; import utc from "dayjs/plugin/utc"; import timezone from "dayjs/plugin/timezone"; import "dayjs/locale/ar";
 
-    body {
-      font-family: 'Creepster', cursive;
-      overflow: hidden;
-      background: linear-gradient(160deg, #000000, #111111, #1a1a1a);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      position: relative;
-      text-align: center;
-    }
+import { Card, CardContent } from "@/components/ui/card";
 
-    h1 {
-      font-size: 3em;
-      margin-bottom: 1em;
-      z-index: 2;
-      text-shadow: 0 0 10px red;
-    }
+import "tailwindcss/tailwind.css";
 
-    .mirror {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 2em;
-      border-radius: 20px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
-      max-width: 700px;
-      z-index: 2;
-      position: relative;
-      animation: pulse 4s infinite alternate ease-in-out;
-    }
+dayjs.extend(utc); dayjs.extend(timezone); dayjs.locale("ar");
 
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
-      100% { transform: scale(1.02); box-shadow: 0 0 25px rgba(255, 0, 0, 0.3); }
-    }
+const countries = [ { name: "السعودية", code: "sa", timezone: "Asia/Riyadh" }, { name: "مصر", code: "eg", timezone: "Africa/Cairo" }, { name: "الإمارات", code: "ae", timezone: "Asia/Dubai" }, { name: "المغرب", code: "ma", timezone: "Africa/Casablanca" }, { name: "العراق", code: "iq", timezone: "Asia/Baghdad" }, { name: "الجزائر", code: "dz", timezone: "Africa/Algiers" }, { name: "سوريا", code: "sy", timezone: "Asia/Damascus" }, { name: "قطر", code: "qa", timezone: "Asia/Qatar" }, { name: "الكويت", code: "kw", timezone: "Asia/Kuwait" }, { name: "عمان", code: "om", timezone: "Asia/Muscat" }, { name: "تونس", code: "tn", timezone: "Africa/Tunis" }, { name: "البحرين", code: "bh", timezone: "Asia/Bahrain" }, { name: "لبنان", code: "lb", timezone: "Asia/Beirut" }, { name: "اليمن", code: "ye", timezone: "Asia/Aden" }, { name: "فلسطين", code: "ps", timezone: "Asia/Gaza" }, { name: "السودان", code: "sd", timezone: "Africa/Khartoum" }, { name: "جيبوتي", code: "dj", timezone: "Africa/Djibouti" }, { name: "موريتانيا", code: "mr", timezone: "Africa/Nouakchott" }, { name: "جزر القمر", code: "km", timezone: "Indian/Comoro" } ];
 
-    .message {
-      font-size: 1.5em;
-      min-height: 100px;
-      transition: all 0.3s ease;
-    }
+export default function App() { const [times, setTimes] = useState({});
 
-    button {
-      padding: 0.8em 1.5em;
-      font-size: 1em;
-      border: none;
-      border-radius: 10px;
-      background-color: #440000;
-      color: white;
-      cursor: pointer;
-      margin-top: 1.5em;
-      transition: background 0.3s ease;
-    }
+useEffect(() => { const updateTimes = () => { const newTimes = {}; countries.forEach(country => { newTimes[country.code] = dayjs().tz(country.timezone).format("HH:mm:ss"); }); setTimes(newTimes); };
 
-    button:hover {
-      background-color: #770000;
-    }
+updateTimes();
+const interval = setInterval(updateTimes, 1000);
+return () => clearInterval(interval);
 
-    .fog {
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: url('https://i.imgur.com/8fKQ3xL.png') repeat;
-      background-size: cover;
-      opacity: 0.05;
-      animation: fogMove 120s linear infinite;
-      z-index: 0;
-      pointer-events: none;
-    }
+}, []);
 
-    @keyframes fogMove {
-      from { transform: translate(0, 0); }
-      to { transform: translate(20%, 20%); }
-    }
+return ( <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white p-6"> <h1 className="text-3xl font-bold text-center text-blue-700 mb-6">الوقت الحالي في الدول العربية</h1> <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"> {countries.map(country => ( <Card key={country.code} className="flex items-center space-x-4 rtl:space-x-reverse p-4 shadow-xl"> <img src={https://flagcdn.com/w40/${country.code}.png} alt={country.name} className="w-10 h-6 rounded shadow-md" /> <CardContent className="flex flex-col"> <span className="text-lg font-semibold text-gray-800">{country.name}</span> <span className="text-blue-600 text-sm">{times[country.code]}</span> </CardContent> </Card> ))} </div> </div> ); }
 
-    .eyes-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .eye {
-      position: absolute;
-      border-radius: 50%;
-      background: white;
-      box-shadow: inset -10px -10px 0 black;
-      animation: blink 6s infinite;
-      opacity: 0.05;
-    }
-
-    @keyframes blink {
-      0%, 97%, 100% { transform: scaleY(1); }
-      98%, 99% { transform: scaleY(0.1); }
-    }
-
-    #bg-audio {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <audio autoplay loop id="bg-audio">
-    <source src="https://cdn.pixabay.com/audio/2022/10/20/audio_bf8ff2f1f0.mp3" type="audio/mp3">
-  </audio>
-
-  <div class="fog"></div>
-  <div class="eyes-container" id="eyes"></div>
-
-  <h1>انعكاسك يقول:</h1>
-  <div class="mirror">
-    <div class="message" id="message">اضغط الزر... لتكتشف من أنت حقاً...</div>
-    <button onclick="showMessage()">من أنا؟</button>
-  </div>
-
-  <script>
-    const messages = [
-      "هناك شيء يراقبك... لكنه بداخلك.",
-      "أنت لا تتذكر الحلم... لأنك كنت بداخله.",
-      "كل ما تنساه... يتجمع هنا.",
-      "ضحكتك تخفي صوتاً آخر.",
-      "عقلك لا ينام... فقط يراقب.",
-      "كأنك كنت هنا من قبل... أو ما زلت.",
-      "أنت انعكاس لشخص لم يوجد أبداً.",
-      "كل شيء طبيعي... حتى تنظر بعمق.",
-      "لماذا المرآة لا تعكسك كما تتخيل؟",
-      "الظل خلفك ليس ظلّك.",
-      "هل تراقب؟ أم تُراقب؟",
-      "كل مرة تنظر فيها هنا، تُنسى في عالمٍ آخر.",
-      "شيء في داخلك يحاول الخروج.",
-      "أنت تعيش في لحظة عالقة منذ زمن.",
-      "العين ترى، لكنك لا تدرك.",
-      "هناك اسم تنساه... لكنه يتكرر في أحلامك.",
-      "أنت شخصية ثانوية في حياة غيرك.",
-      "هناك من يستخدم جسدك حين تنام.",
-      "أنت لا تشعر بالوقت... لأنه لم يعد حقيقي.",
-      "الأصوات التي تتجاهلها... تعرفك جيداً.",
-      "كل شيء هادئ... أكثر من اللازم.",
-      "المرآة لا تكذب، لكنها تخفي الحقيقة.",
-      "أنفاسك ليست وحدك.",
-      "كل ما تراه... يُراقبك في المقابل.",
-      "أنت متفرع، لكنك لا تعلم من الأصل.",
-      "ربما أنت ذكرى لشخص مات.",
-      "تحرك الآن... فقط لترى من سيتبعك.",
-      "وجهك ليس كما تراه... بل كما يراه الآخرون.",
-      "في صمتك، توجد رسائل كثيرة لم تُقرأ.",
-      "كل جملة هنا... كانت في ذهنك مسبقاً.",
-      "الباب المغلق خلفك... لم يكن مغلقًا تماماً.",
-      "أحيانًا، يغمض ظلك عينيه قبلك.",
-      "متى كانت آخر مرة رأيت نفسك؟ حقًا؟",
-      "الدم في أحلامك له رائحة مألوفة.",
-      "تذكرت اسمك... لكنه لم يكن لك.",
-      "كلما خفت، يصبح أقرب.",
-      "همس في أذنك البارحة... لم يكن من حلم.",
-      "كل ثانية تمر... تُمحى نسخة منك.",
-      "ذلك الصوت الذي تسمعه عندما تصمت... ليس من عالمنا.",
-      "شيء ما ينتظرك في الجانب الآخر من المرآة."
-    ];
-
-    const msgBox = document.getElementById('message');
-
-    function typeEffect(text, i = 0) {
-      if (i === 0) msgBox.textContent = '';
-      if (i < text.length) {
-        msgBox.textContent += text[i];
-        setTimeout(() => typeEffect(text, i + 1), 50);
-      }
-    }
-
-    function showMessage() {
-      const msg = messages[Math.floor(Math.random() * messages.length)];
-      typeEffect(msg);
-    }
-
-    const container = document.getElementById('eyes');
-    for (let i = 0; i < 20; i++) {
-      const eye = document.createElement('div');
-      eye.className = 'eye';
-      eye.style.top = `${Math.random() * 100}%`;
-      eye.style.left = `${Math.random() * 100}%`;
-      eye.style.width = eye.style.height = `${20 + Math.random() * 30}px`;
-      eye.style.animationDelay = `${Math.random() * 5}s`;
-      container.appendChild(eye);
-    }
-  </script>
-</body>
-</html>
